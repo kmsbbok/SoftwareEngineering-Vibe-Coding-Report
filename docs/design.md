@@ -40,7 +40,9 @@ Expense Tracker는 단일 페이지 웹 애플리케이션(SPA) 형태로 설계
 
 ## 5. 화면 설계 (Wireframe)
 
-와이어프레임은 [wireframe.html](./wireframe.html) 파일을 참고한다.
+![Wireframe](./wireframe.png)
+
+HTML 코드는 [wireframe.html](./wireframe.html)에 작성되어 있다.
 
 ## 6. 요구사항 추적 매트릭스 (RTM)
 
