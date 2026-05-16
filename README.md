@@ -57,3 +57,19 @@ AI는 다음 과정에서 보조 도구로 사용한다.
 - 개발 주제 후보 검토
 - Expense Tracker를 개발 주제로 선정
 - AI 활용 방식 및 프로세스 적용 방향 정리
+
+## 2일차 작업 기록
+
+- 요구사항 분석 수행
+- 기능 요구사항 6개, 비기능 요구사항 3개 도출
+- 유스케이스 4종 정리
+- 제약사항 정의 (프레임워크 미사용, 메모리 저장 방식)
+- requirements.md 문서화
+- UI 와이어프레임 시안 작성 (HTML 기반)
+- wireframe.html 및 wireframe.png 생성
+- 아키텍처 및 모듈 구성 설계 (UI, Transaction, Calculation, Validation 모듈)
+- 데이터 구조 정의 (id, type, description, amount)
+- 주요 함수 5종 명세 (addTransaction, deleteTransaction, calculateBalance, validateInput, renderList)
+- 요구사항 추적 매트릭스(RTM) 작성
+- 설계 결정 사항 및 적용 설계 원칙(SRP, DRY, 결합도/응집도) 정리
+- design.md 문서화
