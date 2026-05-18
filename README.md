@@ -73,3 +73,16 @@ AI는 다음 과정에서 보조 도구로 사용한다.
 - 요구사항 추적 매트릭스(RTM) 작성
 - 설계 결정 사항 및 적용 설계 원칙(SRP, DRY, 결합도/응집도) 정리
 - design.md 문서화
+
+## 3일차 작업 기록
+- index.html 구현
+- HTML 구조 작성 (입력 폼, 요약 영역, 거래 내역 목록)
+- CSS 스타일링 (wireframe 시안 기반)
+- JavaScript 로직 구현
+  - addTransaction(): 거래 추가 함수
+  - deleteTransaction(): 거래 삭제 함수
+  - calculateBalance(): 총수입/총지출/잔액 계산
+  - validateInput(): 입력값 유효성 검증
+  - renderList(): 거래 내역 화면 갱신
+- 단일 파일 구조 적용 (HTML + CSS + JS 통합)
+- 브라우저에서 동작 확인
