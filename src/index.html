@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Expense Tracker</title>
+<style>
+  body { font-family: sans-serif; background: #f5f5f5; padding: 2rem; margin: 0; }
+  .container { max-width: 480px; margin: 0 auto; background: white; border: 1px solid #ddd; border-radius: 12px; padding: 1.25rem; }
+  h2 { font-size: 18px; font-weight: 500; margin: 0 0 1.25rem; text-align: center; }
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .summary-card { background: #f5f5f5; border-radius: 8px; padding: 0.75rem; }
+  .summary-card p { margin: 0; }
+  .label { font-size: 13px; color: #666; margin-bottom: 4px; }
+  .value { font-size: 16px; font-weight: 500; }
+  .income { color: #1d9e75; }
+  .expense { color: #e24b4a; }
+  .form-section { border-top: 1px solid #eee; padding-top: 1rem; margin-bottom: 1.25rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  input { padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; width: 100%; }
+  .radio-group { display: flex; gap: 16px; margin-bottom: 8px; font-size: 14px; }
+  button { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 14px; }
+  button:hover { background: #f0f0f0; }
+  .list-title { font-size: 14px; font-weight: 500; margin: 0 0 8px; color: #666; }
+  .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 6px; }
+  .item-right { display: flex; align-items: center; gap: 12px; }
+  .item-right button { padding: 2px 8px; font-size: 12px; width: auto; }
+  .empty { text-align: center; color: #999; font-size: 13px; padding: 12px; }
+  .error { color: #e24b4a; font-size: 13px; margin-bottom: 8px; min-height: 18px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Expense Tracker</h2>
+
+    <div class="summary">
+      <div class="summary-card">
+        <p class="label">총수입</p>
+        <p class="value income" id="totalIncome">0</p>
+      </div>
+      <div class="summary-card">
+        <p class="label">총지출</p>
+        <p class="value expense" id="totalExpense">0</p>
+      </div>
+      <div class="summary-card">
+        <p class="label">잔액</p>
+        <p class="value" id="balance">0</p>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-row">
+        <input type="text" id="descInput" placeholder="항목명">
+        <input type="number" id="amountInput" placeholder="금액">
+      </div>
+      <div class="radio-group">
+        <label><input type="radio" name="type" value="income" checked> 수입</label>
+        <label><input type="radio" name="type" value="expense"> 지출</label>
+      </div>
+      <p class="error" id="errorMsg"></p>
+      <button onclick="addTransaction()">추가</button>
+    </div>
+
+    <div>
+      <p class="list-title">거래 내역</p>
+      <div id="transactionList"></div>
+    </div>
+  </div>
+
+<script>
+  let transactions = [];
+  let nextId = 1;
+
+  function validateInput(description, amount) {
+    if (!description || description.trim() === "") {
+      return "항목명을 입력하세요.";
+    }
+    if (isNaN(amount) || amount <= 0) {
+      return "금액은 0보다 큰 숫자여야 합니다.";
+    }
+    return null;
+  }
+
+  function addTransaction() {
+    const description = document.getElementById("descInput").value.trim();
+    const amount = parseFloat(document.getElementById("amountInput").value);
+    const type = document.querySelector('input[name="type"]:checked').value;
+    const errorEl = document.getElementById("errorMsg");
+
+    const error = validateInput(description, amount);
+    if (error) {
+      errorEl.textContent = error;
+      return;
+    }
+    errorEl.textContent = "";
+
+    transactions.push({
+      id: nextId++,
+      type: type,
+      description: description,
+      amount: amount
+    });
+
+    document.getElementById("descInput").value = "";
+    document.getElementById("amountInput").value = "";
+
+    renderList();
+    calculateBalance();
+  }
+
+  function deleteTransaction(id) {
+    transactions = transactions.filter(t => t.id !== id);
+    renderList();
+    calculateBalance();
+  }
+
+  function calculateBalance() {
+    let income = 0;
+    let expense = 0;
+
+    transactions.forEach(t => {
+      if (t.type === "income") income += t.amount;
+      else expense += t.amount;
+    });
+
+    document.getElementById("totalIncome").textContent = income.toLocaleString();
+    document.getElementById("totalExpense").textContent = expense.toLocaleString();
+    document.getElementById("balance").textContent = (income - expense).toLocaleString();
+  }
+
+  function renderList() {
+    const listEl = document.getElementById("transactionList");
+
+    if (transactions.length === 0) {
+      listEl.innerHTML = '<p class="empty">거래 내역이 없습니다.</p>';
+      return;
+    }
+
+    listEl.innerHTML = transactions.map(t => {
+      const sign = t.type === "income" ? "+" : "-";
+      const colorClass = t.type === "income" ? "income" : "expense";
+      return `
+        <div class="item">
+          <span>${t.description}</span>
+          <div class="item-right">
+            <span class="${colorClass}">${sign}${t.amount.toLocaleString()}</span>
+            <button onclick="deleteTransaction(${t.id})">삭제</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  renderList();
+</script>
+</body>
+</html>
